@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FD Calculater</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin-top: 20px;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        table {
+            margin-top: 30px;
+        }
+
+        canvas {
+            margin-top: 30px;
+        }
+
+        .form-control-range {
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer;
+            height: 2px;
+            background-color: transparent;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .form-control-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #28a745;
+            cursor: pointer;
+            border: 2px solid #28a745;
+            transition: border 0.15s ease-in-out;
+            margin-top: -5px;
+        }
+
+        .form-control-range::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 10px;
+            cursor: pointer;
+            background-color: #dee2e6;
+            border-radius: 5px;
+        }
+        input[type="range"]::-webkit-slider-thumb:active {
+            background-color: #28a745; 
+        }
+        .form-control-range::-webkit-slider-thumb:hover {
+            border-color: #218838;
+        }
+        .col-md-6 .form-group {
+            position: relative;
+        }
+
+        .col-md-6 .form-group input[type="number"] {
+            padding-right: 30px; 
+        }
+
+        .col-md-6 .form-group input[type="number"]:focus+.form-control-range {
+            opacity: 1;
+        }
+
+        .col-md-6 .form-group input[type="number"]+.form-control-range {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            opacity: 0;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="display-4">FD Calculator</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="TOTAL_INVESTMENT">Total Investment</label>
+                    <div class="input-group">
+                        <span class="input-group-prepend">
+                            <span class="input-group-text">₹</span>
+
+                            <input class="form-control" type="number" id="TOTAL_INVESTMENT" placeholder="0"
+                                value="5000">
+                    </div>
+                    <input type="range" class="form-control-range mt-2" id="investmentRange" min="5000" max="1000000"
+                        step="1000" value="5000">
+                </div>
+
+                <div class="form-group">
+                    <label for="RATE_OF_INTEREST">Rate of interest (p.a)</label>
+                    <div class="input-group">
+                        <input class="form-control" type="number" id="RATE_OF_INTEREST" placeholder="0" value="6.5">
+                        <div class="input-group-append">
+                            <span class="input-group-text">%</span>
+                        </div>
+                    </div>
+                    <input type="range" class="form-control-range mt-2" id="interestRange" min="0" max="15" step="0.1"
+                        value="6.5">
+
+
+                </div>
+
+
+                <div class="form-group">
+                    <label for="FD_TIME_IN_YEARS">Time period</label>
+                    <div class="input-group">
+                        <input class="form-control" type="number" id="FD_TIME_IN_YEARS" placeholder="0" value="5">
+                    </div>
+                    <input type="range" class="form-control-range mt-2" id="timePeriodRange" min="1" max="25" step="1"
+                        value="5">
+
+
+                </div>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td>Invested amount</td>
+                            <td>₹<span id="investedAmount">5000</span></td>
+                        </tr>
+                        <tr>
+                            <td>Est. returns</td>
+                            <td>₹<span id="estimatedReturns">1625</span></td>
+                        </tr>
+                        <tr>
+                            <td>Total value</td>
+                            <td>₹<span id="totalValue"></span>6625</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <canvas id="myChart" width="200" height="200"></canvas>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        document.getElementById('investmentRange').addEventListener('input', function () {
+            document.getElementById('TOTAL_INVESTMENT').value = this.value;
+           
+            calculateFD();
+        });
+   
+        document.getElementById('interestRange').addEventListener('input', function () {
+            document.getElementById('RATE_OF_INTEREST').value = this.value;
+            calculateFD();
+        });
+        document.getElementById('timePeriodRange').addEventListener('input', function () {
+            document.getElementById('FD_TIME_IN_YEARS').value = this.value;
+            calculateFD();
+        });
+        function calculateFD() {
+            const totalInvestment = document.getElementById('TOTAL_INVESTMENT').value;
+            const rateOfInterest = document.getElementById('RATE_OF_INTEREST').value;
+            const timePeriod = document.getElementById('FD_TIME_IN_YEARS').value;
+
+            const investedAmount = (Math.floor(totalInvestment / 1000)) * 1000;
+            const estimatedReturns = (totalInvestment * rateOfInterest * timePeriod) / 100;
+            const totalValue = parseFloat(totalInvestment) + estimatedReturns;
+
+            document.getElementById('investedAmount').innerText = '₹' + investedAmount.toFixed(2);
+            document.getElementById('estimatedReturns').innerText = '₹' + estimatedReturns.toFixed(2);
+            document.getElementById('totalValue').innerText = '₹' + totalValue.toFixed(2);
+            updateChart(investedAmount, estimatedReturns, totalValue);
+
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            // Call the function to initialize the chart on page load
+            initializeChart();
+        });
+
+        function initializeChart() {
+            const investedAmount = 5000; 
+            const estimatedReturns = 325; 
+            updateChart(investedAmount, estimatedReturns);
+        }
+        let myChart;
+
+        function updateChart(investedAmount, estimatedReturns, totalValue) {
+
+            const  ctx = document.getElementById('myChart').getContext('2d');
+            if (myChart) {
+                myChart.destroy();
+            }
+           myChart = new Chart(ctx, {
+                type: 'doughnut', 
+                data: {
+                    labels: ['Investment', 'Returns'],
+                    datasets: [{
+                        label: 'FD Details',
+                        data: [investedAmount, estimatedReturns],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(42, 210, 201, 1)',
+                            
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+
+    </script>
+</body>
+
+</html>
