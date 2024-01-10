@@ -12,6 +12,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+       
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -72,18 +74,21 @@
             background-color: #dee2e6;
             border-radius: 5px;
         }
+
         input[type="range"]::-webkit-slider-thumb:active {
-            background-color: #28a745; 
+            background-color: #28a745;
         }
+
         .form-control-range::-webkit-slider-thumb:hover {
             border-color: #218838;
         }
+
         .col-md-6 .form-group {
             position: relative;
         }
 
         .col-md-6 .form-group input[type="number"] {
-            padding-right: 30px; 
+            padding-right: 30px;
         }
 
         .col-md-6 .form-group input[type="number"]:focus+.form-control-range {
@@ -98,7 +103,11 @@
             left: 0;
             opacity: 0;
         }
-        
+
+        .modal-body {
+            max-height: calc(100vh - 400px);
+            overflow-y: auto;
+        }
     </style>
 </head>
 
@@ -112,52 +121,68 @@
                     <div class="input-group">
                         <span class="input-group-prepend">
                             <span class="input-group-text">₹</span>
-
-                            <input class="form-control" type="number" id="TOTAL_INVESTMENT" placeholder="0"
-                                value="5000">
+                            <!-- <input class="form-control" type="number" id="TOTAL_INVESTMENT" placeholder="0"
+                                value="0">
+                            <input class="form-control" type="number" id="amountInput" placeholder="Enter Amount"> -->
+                            <input class="form-control" type="number" id="investmentInput"
+                                placeholder="Enter Investment Amount" value="0">
+                            <button type="button" class="btn btn-primary" id="useButton" data-toggle="modal"
+                                data-target="#amountModal">Use</button>
+                        </span>
                     </div>
-                    <input type="range" class="form-control-range mt-2" id="investmentRange" min="5000" max="1000000"
-                        step="1000" value="5000">
+                    <input type="range" class="form-control-range mt-2" id="investmentRange" min="0" max="1000000"
+                        step="1000" value="0">
                 </div>
 
                 <div class="form-group">
                     <label for="RATE_OF_INTEREST">Rate of interest (p.a)</label>
                     <div class="input-group">
-                        <input class="form-control" type="number" id="RATE_OF_INTEREST" placeholder="0" value="6.5">
+
+                        <!-- <input class="form-control" type="number" id="RATE_OF_INTEREST" placeholder="0" value="0">
                         <div class="input-group-append">
                             <span class="input-group-text">%</span>
                         </div>
+                        <input class="form-control" type="number" id="interestInput" placeholder="Enter Interest"> -->
+                        <input class="form-control" type="number" id="interestInput" placeholder="Enter Interest Amount"
+                            value="0">
+                        <div class="input-group-append">
+                            <span class="input-group-text">%</span>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="useInterestButton" data-toggle="modal"
+                            data-target="#interestModal">Use</button>
                     </div>
                     <input type="range" class="form-control-range mt-2" id="interestRange" min="0" max="15" step="0.1"
-                        value="6.5">
-
-
+                        value="0">
                 </div>
-
-
                 <div class="form-group">
                     <label for="FD_TIME_IN_YEARS">Time period</label>
                     <div class="input-group">
-                        <input class="form-control" type="number" id="FD_TIME_IN_YEARS" placeholder="0" value="5">
+                        <!-- <input class="form-control" type="number" id="FD_TIME_IN_YEARS" placeholder="0" value="0">
+                        <input class="form-control" type="number" id="timeInput" placeholder="Enter Time Period"> -->
+                        <input class="form-control" type="text" id="timeInput" placeholder="Enter Time Period"
+                            value="0">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-info" type="button" id="cycleButton">Years</button>
+                            </div>
+                        <button type="button" class="btn btn-primary" id="useTimeButton" data-toggle="modal"
+                            data-target="#timeModal">Use</button>
                     </div>
                     <input type="range" class="form-control-range mt-2" id="timePeriodRange" min="1" max="25" step="1"
-                        value="5">
-
-
+                        value="0">
                 </div>
                 <table class="table">
                     <tbody>
                         <tr>
                             <td>Invested amount</td>
-                            <td>₹<span id="investedAmount">5000</span></td>
+                            <td>₹<span id="investedAmount">0</span></td>
                         </tr>
                         <tr>
                             <td>Est. returns</td>
-                            <td>₹<span id="estimatedReturns">1625</span></td>
+                            <td>₹<span id="estimatedReturns">0</span></td>
                         </tr>
                         <tr>
                             <td>Total value</td>
-                            <td>₹<span id="totalValue"></span>6625</td>
+                            <td>₹<span id="totalValue"></span>0</td>
                         </tr>
                     </tbody>
                 </table>
@@ -166,85 +191,76 @@
                 <canvas id="myChart" width="200" height="200"></canvas>
             </div>
         </div>
-
+        <div class="modal fade" id="amountModal" tabindex="-1" role="dialog" aria-labelledby="amountModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="amountModalLabel">Select Amount</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Select an amount:</p>
+                        <input class="form-control" list="amountList" id="selectAmount">
+                        <datalist id="amountList"></datalist>
+                        <!-- <select class="form-control" id="selectAmount"></select> -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <script>
-        document.getElementById('investmentRange').addEventListener('input', function () {
-            document.getElementById('TOTAL_INVESTMENT').value = this.value;
-           
-            calculateFD();
-        });
-   
-        document.getElementById('interestRange').addEventListener('input', function () {
-            document.getElementById('RATE_OF_INTEREST').value = this.value;
-            calculateFD();
-        });
-        document.getElementById('timePeriodRange').addEventListener('input', function () {
-            document.getElementById('FD_TIME_IN_YEARS').value = this.value;
-            calculateFD();
-        });
-        function calculateFD() {
-            const totalInvestment = document.getElementById('TOTAL_INVESTMENT').value;
-            const rateOfInterest = document.getElementById('RATE_OF_INTEREST').value;
-            const timePeriod = document.getElementById('FD_TIME_IN_YEARS').value;
-
-            const investedAmount = (Math.floor(totalInvestment / 1000)) * 1000;
-            const estimatedReturns = (totalInvestment * rateOfInterest * timePeriod) / 100;
-            const totalValue = parseFloat(totalInvestment) + estimatedReturns;
-
-            document.getElementById('investedAmount').innerText = '₹' + investedAmount.toFixed(2);
-            document.getElementById('estimatedReturns').innerText = '₹' + estimatedReturns.toFixed(2);
-            document.getElementById('totalValue').innerText = '₹' + totalValue.toFixed(2);
-            updateChart(investedAmount, estimatedReturns, totalValue);
-
-        }
-        document.addEventListener('DOMContentLoaded', function () {
-            // Call the function to initialize the chart on page load
-            initializeChart();
-        });
-
-        function initializeChart() {
-            const investedAmount = 5000; 
-            const estimatedReturns = 325; 
-            updateChart(investedAmount, estimatedReturns);
-        }
-        let myChart;
-
-        function updateChart(investedAmount, estimatedReturns, totalValue) {
-
-            const  ctx = document.getElementById('myChart').getContext('2d');
-            if (myChart) {
-                myChart.destroy();
-            }
-           myChart = new Chart(ctx, {
-                type: 'doughnut', 
-                data: {
-                    labels: ['Investment', 'Returns'],
-                    datasets: [{
-                        label: 'FD Details',
-                        data: [investedAmount, estimatedReturns],
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(42, 210, 201, 1)',
-                            
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }
+    <div class="modal fade" id="interestModal" tabindex="-1" role="dialog" aria-labelledby="interestModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="interestModalLabel">Select Interest</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Select an interest:</p>
+                    <input class="form-control" list="interestList" id="selectInterest">
+                    <datalist id="interestList"></datalist>
+                    <!-- <select class="form-control" id="selectInterest"></select> -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="modal fade" id="timeModal" tabindex="-1" role="dialog" aria-labelledby="timeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="timeModalLabel">Select Time Period</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Select an interest:</p>
+                    <input class="form-control" list="timePeriodList" id="selectTime">
+                    <datalist id="timePeriodList"></datalist>
+                    <!-- <select class="form-control" id="selectTime"></select> -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script src="fdcalc.js">
 
 
     </script>
