@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const investmentRange = document.getElementById('investmentRange');
     const investmentInput = document.getElementById('investmentInput');
     const amountList = document.getElementById('amountList');
-
     for (let amount = 5000; amount <= 1000000; amount += 1000) {
         const option = document.createElement('option');
         option.value = amount;
@@ -43,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
         calculateFD();
     })
 });
+
 document.addEventListener('DOMContentLoaded', function () {
     const selectInterest = document.getElementById('selectInterest');
     const useInterestButton = document.getElementById('useInterestButton');
@@ -73,16 +73,14 @@ document.addEventListener('DOMContentLoaded', function () {
         interestInput.value = this.value;
         calculateFD();
     });
-
 });
+
 document.addEventListener('DOMContentLoaded', function () {
     const selectTime = document.getElementById('selectTime');
     const useTimeButton = document.getElementById('useTimeButton');
     const timePeriodRange = document.getElementById('timePeriodRange');
     const timeInput = document.getElementById('timeInput');
     const timePeriodList = document.getElementById('timePeriodList');
-
-
     for (let time = 1; time <= 25; time++) {
         const option = document.createElement('option');
         option.value = time;
@@ -106,14 +104,13 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('timeInput').value = this.value;
         calculateFD();
     });
-
 });
+
 document.getElementById('investmentRange').addEventListener('input', function () {
     document.getElementById('investmentInput').value = this.value;
 
     calculateFD();
 });
-
 document.getElementById('interestRange').addEventListener('input', function () {
     document.getElementById('interestInput').value = this.value;
     calculateFD();
@@ -122,10 +119,10 @@ document.getElementById('timePeriodRange').addEventListener('input', function ()
     document.getElementById('timeInput').value = this.value;
     calculateFD();
 });
+
 document.addEventListener('DOMContentLoaded', function () {
     const timeInput = document.getElementById('timeInput');
     const cycleButton = document.getElementById('cycleButton');
-
     let currentUnit = 'years';
     function cycleUnits() {
         if (currentUnit === 'years') {
@@ -138,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
             currentUnit = 'years';
             cycleButton.textContent = 'Years';
         }
-       timeInput.placeholder = `Enter Time Period (${currentUnit})`;
+        timeInput.placeholder = `Enter Time Period (${currentUnit})`;
         calculateFD();
     }
     // Event listener for clicking the cycle button
@@ -146,6 +143,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Event listener for input change
     timeInput.addEventListener('input', calculateFD)
 });
+
 function calculateFD() {
     const totalInvestment = document.getElementById('investmentInput').value;
     const rateOfInterest = document.getElementById('interestInput').value;
@@ -160,24 +158,23 @@ function calculateFD() {
     if (currentUnit === 'years') {
         estimatedReturns = (totalInvestment * rateOfInterest * timePeriod) / 100;
     } else if (currentUnit === 'months') {
-        estimatedReturns = (totalInvestment * rateOfInterest * (timePeriod / 12)/100);
+        estimatedReturns = (totalInvestment * rateOfInterest * (timePeriod / 12) / 100);
     } else {
-        estimatedReturns = (totalInvestment * rateOfInterest * (timePeriod / 365)/100);
+        estimatedReturns = (totalInvestment * rateOfInterest * (timePeriod / 365) / 100);
     }
     totalValue = Number(totalInvestment) + Number(estimatedReturns);
-   // totalValue = totalInvestment + estimatedReturns;
+    // totalValue = totalInvestment + estimatedReturns;
     document.getElementById('investedAmount').innerText = '₹' + investedAmount.toFixed(2);
     document.getElementById('estimatedReturns').innerText = '₹' + estimatedReturns.toFixed(2);
     document.getElementById('totalValue').innerText = '₹' + totalValue.toFixed(2);
     updateChart(investedAmount, estimatedReturns);
-
 }
+
 let myChart;
 document.addEventListener('DOMContentLoaded', function () {
     // Call the function to initialize the chart on page load
     initializeChart();
 });
-
 function initializeChart() {
     const investedAmount = 1;
     const estimatedReturns = 1;
@@ -215,8 +212,6 @@ function initializeChart() {
         }
     });
 }
-
-
 function updateChart(investedAmount, estimatedReturns) {
     if (myChart) {
         myChart.data.datasets[0].data = [investedAmount, estimatedReturns];
