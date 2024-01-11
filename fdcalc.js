@@ -169,7 +169,10 @@ function calculateFD() {
         estimatedReturns = (totalInvestment * rateOfInterest * (timePeriod / 365) / 100);
     }
     totalValue = Number(totalInvestment) + Number(estimatedReturns);
-
+    console.log("totalInvestment:", totalInvestment);
+    console.log("rateOfInterest:", rateOfInterest);
+    console.log("timePeriod:", timePeriod);
+    console.log("estimatedReturns:", estimatedReturns);
     const formattedInvested = investedAmount.toLocaleString('en-IN',{
         style:'currency',
         currency:'INR',
