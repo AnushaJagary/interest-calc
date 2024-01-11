@@ -15,8 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     for (let amount = 5000; amount <= 1000000; amount += 1000) {
         const option = document.createElement('option');
         option.value = amount;
-        option.textContent = '₹' + amount.toLocaleString('en-IN');
-          
+        option.textContent = amount.toLocaleString('en-IN');
         amountList.appendChild(option);
     }
     // Attach event listeners after DOM content is loaded
@@ -173,15 +172,15 @@ function calculateFD() {
 
     const formattedInvested = investedAmount.toLocaleString('en-IN',{
         style:'currency',
-        currency:'INR'
+        currency:'INR',
     });
     const formattedEstimatedReturns = estimatedReturns.toLocaleString('en-IN',{
         style:'currency',
-        currency:'INR'
+        currency:'INR',
     });
     const formattedTotalValue = totalValue.toLocaleString('en-IN', {
         style:'currency',
-        currency:'INR'
+        currency:'INR',
     })
     // totalValue = totalInvestment + estimatedReturns;
     document.getElementById('investedAmount').innerText = formattedInvested;
