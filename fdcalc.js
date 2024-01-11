@@ -163,10 +163,23 @@ function calculateFD() {
         estimatedReturns = (totalInvestment * rateOfInterest * (timePeriod / 365) / 100);
     }
     totalValue = Number(totalInvestment) + Number(estimatedReturns);
+
+    const formattedInvested = investedAmount.toLocaleString('en-IN',{
+        style:'currency',
+        currency:'INR'
+    });
+    const formattedEstimatedReturns = estimatedReturns.toLocaleString('en-IN',{
+        style:'currency',
+        currency:'INR'
+    });
+    const formattedTotalValue = totalValue.toLocaleString('en-IN', {
+        style:'currency',
+        currency:'INR'
+    })
     // totalValue = totalInvestment + estimatedReturns;
-    document.getElementById('investedAmount').innerText = '₹' + investedAmount.toFixed(2);
-    document.getElementById('estimatedReturns').innerText = '₹' + estimatedReturns.toFixed(2);
-    document.getElementById('totalValue').innerText = '₹' + totalValue.toFixed(2);
+    document.getElementById('investedAmount').innerText = '₹' + formattedInvested;
+    document.getElementById('estimatedReturns').innerText = '₹' + formattedEstimatedReturns;
+    document.getElementById('totalValue').innerText = '₹' + formattedTotalValue;
     updateChart(investedAmount, estimatedReturns);
 }
 
